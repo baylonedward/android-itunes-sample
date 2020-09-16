@@ -22,7 +22,7 @@ class ITunesRepository(
   /**
    * Be default we are setting country to au
    */
-  fun getMovieByCountry(query: String, country: String = "au"): Flow<Resource<List<Track>>> {
+  fun getMovieByCountry(query: String, country: String): Flow<Resource<List<Track>>> {
     val map = mapOf("term" to query, "country" to country, "media" to "movie")
     return performGetOperation(
       databaseQuery = { localDataSource.all() },

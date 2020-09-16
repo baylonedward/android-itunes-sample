@@ -41,9 +41,10 @@ class RepositoryTest {
   @Test
   fun testGetMovieByCountry() {
     val query = "star"
+    val country = "au"
     runBlocking {
       launch {
-        testSetup.iTunesRepository.getMovieByCountry(query).collect {
+        testSetup.iTunesRepository.getMovieByCountry(query, country).collect {
           when (it.status) {
             Resource.Status.LOADING -> {
               Assert.assertNull(it.data)

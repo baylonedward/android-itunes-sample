@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">android-itunes-sample</string>
+  <string name="master_title_header">Star Movies</string>
 </resources>

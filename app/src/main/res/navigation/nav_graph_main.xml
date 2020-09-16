@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/nav_graph_main"
+  app:startDestination="@+id/navigation_master">
+
+  <fragment
+    android:id="@+id/navigation_master"
+    android:name="com.kikimore.android_itunes_sample.main.master.MasterFragment"
+    tools:layout="@layout/fragment_master">
+    <action
+      android:id="@+id/action_navigation_master_to_detail"
+      app:destination="@id/navigation_detail"
+      app:enterAnim="@anim/fragment_open_enter"
+      app:exitAnim="@anim/fragment_open_exit"
+      app:popEnterAnim="@anim/fragment_close_enter"
+      app:popExitAnim="@anim/fragment_close_exit" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/navigation_detail"
+    android:name="com.kikimore.android_itunes_sample.main.detail.DetailFragment"
+    tools:layout="@layout/fragment_detail" />
+</navigation>
