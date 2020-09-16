@@ -13,6 +13,9 @@ import kotlinx.android.synthetic.main.track_list_item.view.*
  * Created on: 16/09/2020.
  */
 
+/**
+ * Interface of List item functions
+ */
 interface ListStrategy {
   fun getListCount(): Int
   fun getImageUrl(position: Int): String?

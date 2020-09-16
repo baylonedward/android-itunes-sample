@@ -35,6 +35,7 @@ class MasterFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    // inflate layout according to screen type
     return if (isTablet) {
       inflater.inflate(R.layout.fragment_master_landscape, container, false)
     } else {
@@ -46,7 +47,7 @@ class MasterFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     setListView(view.findViewById(R.id.trackListView))
     setObservers()
-    if (isTablet) displayDetailLayout()
+    if (isTablet) displayDetailLayout() // display detail fragment on Tablet mode
   }
 
   private fun setListView(recyclerView: RecyclerView) {

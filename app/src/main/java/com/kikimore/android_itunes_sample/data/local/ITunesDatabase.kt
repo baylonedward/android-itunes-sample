@@ -9,6 +9,8 @@ import com.kikimore.android_itunes_sample.data.entities.Track
 /**
  * Created by: ebaylon.
  * Created on: 15/09/2020.
+ *
+ * Database class for local storage
  */
 @Database(
   entities = [Track::class],

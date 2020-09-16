@@ -8,6 +8,8 @@ import androidx.room.Update
 /**
  * Created by: ebaylon.
  * Created on: 25/07/2020.
+ *
+ * Generic Dao to implement common methods available for Room
  */
 interface BaseDao<T> {
   /**

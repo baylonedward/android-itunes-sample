@@ -6,6 +6,8 @@ import retrofit2.Response
 /**
  * Created by: ebaylon.
  * Created on: 23/07/2020.
+ *
+ * Abstract class to wrapped network response in a single helper class (Resource)
  */
 abstract class BaseDataResource {
   protected suspend fun <T> getResult(call: suspend () -> Response<T>): Resource<T> {

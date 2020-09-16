@@ -16,6 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Created by: ebaylon.
  * Created on: 16/09/2020.
+ *
+ * Singleton class to access data api
  */
 class ITunesApi(context: Context) {
   private val retrofit = Retrofit.Builder()

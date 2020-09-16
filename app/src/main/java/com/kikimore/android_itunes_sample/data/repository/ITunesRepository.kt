@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by: ebaylon.
  * Created on: 15/09/2020.
+ *
+ * Central source of data from both local and network
  */
 
 @ExperimentalCoroutinesApi
@@ -19,9 +21,6 @@ class ITunesRepository(
   private val localDataSource: TrackDao
 ) {
 
-  /**
-   * Be default we are setting country to au
-   */
   fun getMovieByCountry(query: String, country: String): Flow<Resource<List<Track>>> {
     val map = mapOf("term" to query, "country" to country, "media" to "movie")
     return performGetOperation(

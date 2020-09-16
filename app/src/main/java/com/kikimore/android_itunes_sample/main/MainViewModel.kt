@@ -41,7 +41,9 @@ class MainViewModel(
         it.data?.also { tracks ->
           this.tracks = tracks.sortedBy { it.trackName }
           // select first track by default for master detail view
-          this.tracks?.get(0)?.also { selectedTrack.value = it }
+          if (!this.tracks.isNullOrEmpty()){
+            selectedTrack.value = this.tracks?.get(0)
+          }
         }
       }?.launchIn(viewModelScope)
   }

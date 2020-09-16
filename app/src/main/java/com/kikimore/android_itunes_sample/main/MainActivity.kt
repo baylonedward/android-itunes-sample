@@ -9,8 +9,4 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
   }
-
-  companion object {
-    private const val TITLE = "Star Movies"
-  }
 }
