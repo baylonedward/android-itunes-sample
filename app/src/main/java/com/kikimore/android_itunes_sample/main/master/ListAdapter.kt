@@ -22,7 +22,7 @@ interface ListStrategy {
   fun getTrackName(position: Int): String
   fun getGenre(position: Int): String
   fun getPrice(position: Int): String
-  fun onSelect(position: Int, view: View): () -> Unit
+  fun onSelect(position: Int): () -> Unit
 }
 
 class ListAdapter(private val listItemStrategy: ListStrategy) :
@@ -39,7 +39,7 @@ class ListAdapter(private val listItemStrategy: ListStrategy) :
       listItemStrategy.getTrackName(position),
       listItemStrategy.getGenre(position),
       listItemStrategy.getPrice(position),
-      listItemStrategy.onSelect(position, holder.itemView)
+      listItemStrategy.onSelect(position)
     )
   }
 

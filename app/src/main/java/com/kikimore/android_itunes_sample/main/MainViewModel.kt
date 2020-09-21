@@ -25,12 +25,9 @@ class MainViewModel(
   private var tracks: List<Track>? = null
   val trackListState = MutableStateFlow<Resource<List<Track>>?>(null)
   var selectedTrack = MutableStateFlow<Track?>(null)
+  var onSelect = MutableStateFlow<Boolean?>(null)
 
-  init {
-    getTracks()
-  }
-
-  private fun getTracks() {
+  fun getTracks() {
     val query = "star"
     val country = "au"
     api?.iTunesRepository?.getMovieByCountry(query, country)
@@ -67,13 +64,9 @@ class MainViewModel(
     return "$currency $price"
   }
 
-  override fun onSelect(position: Int, view: View): () -> Unit = {
+  override fun onSelect(position: Int): () -> Unit = {
     selectedTrack.value = getTrack(position)
-    val isTablet = view.resources.getBoolean(R.bool.isTablet)
-    if (!isTablet) {
-      view.findNavController().navigate(MasterFragmentDirections.actionNavigationMasterToDetail())
-    } else {
-      selectedTrack.value = getTrack(position)
-    }
+    onSelect.value = true
+    onSelect.value = null
   }
 }
