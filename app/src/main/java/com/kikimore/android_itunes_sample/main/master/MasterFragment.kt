@@ -36,11 +36,7 @@ class MasterFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View? {
     // inflate layout according to screen type
-    return if (isTablet) {
-      inflater.inflate(R.layout.fragment_master_landscape, container, false)
-    } else {
-      inflater.inflate(R.layout.fragment_master, container, false)
-    }
+    return inflater.inflate(R.layout.fragment_master, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,11 +71,6 @@ class MasterFragment : Fragment() {
           toast(it.message!!)
         }
       }
-    }.launchIn(lifecycleScope)
-    // master detail select
-    viewModel.selectedTrack.onEach {
-      if (it == null) return@onEach
-      if (isTablet) displayDetailLayout()
     }.launchIn(lifecycleScope)
   }
 
