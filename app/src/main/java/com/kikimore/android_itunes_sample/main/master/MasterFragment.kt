@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.onEach
 @ExperimentalCoroutinesApi
 class MasterFragment : Fragment() {
 
-  private val api by lazy { ITunesApi(requireActivity().applicationContext) }
+  private val api by lazy { ITunesApi.getInstance(requireActivity().application) }
   private val viewModel by lazy { requireActivity().fetchViewModel { MainViewModel(api) } }
   private val listAdapter by lazy { ListAdapter(viewModel) }
   private val isTablet by lazy { context?.resources?.getBoolean(R.bool.isTablet) ?: false }

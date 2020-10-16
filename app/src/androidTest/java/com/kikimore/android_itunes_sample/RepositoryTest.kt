@@ -44,7 +44,7 @@ class RepositoryTest {
     val country = "au"
     runBlocking {
       launch {
-        testSetup.iTunesRepository.getMovieByCountry(query, country).collect {
+        testSetup.iTunesRepository.getMovieByCountry(query, country)?.collect {
           when (it.status) {
             Resource.Status.LOADING -> {
               Assert.assertNull(it.data)
@@ -81,7 +81,7 @@ class TestSetup {
   private val iTunesService = retrofit.create(ITunesService::class.java)
   private val iTunesRemoteDataSource = ITunesRemoteDataSource(iTunesService)
 
-  val iTunesRepository = ITunesRepository(
+  val iTunesRepository = ITunesRepository.getInstance(
     localDataSource = db.trackDao(),
     remoteDataSource = iTunesRemoteDataSource
   )

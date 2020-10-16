@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  *
  * Singleton class to access data api
  */
-class ITunesApi(context: Context) {
+class ITunesApi private constructor(context: Context) {
   private val retrofit = Retrofit.Builder()
     .baseUrl(baseUrl)
     .addConverterFactory(GsonConverterFactory.create())
@@ -29,24 +29,19 @@ class ITunesApi(context: Context) {
   private val remoteDataSource = ITunesRemoteDataSource(iTunesService)
   private val db = ITunesDatabase.getDatabase(context)
 
-  val iTunesRepository = ITunesRepository(
+  val iTunesRepository = ITunesRepository.getInstance(
     remoteDataSource = remoteDataSource,
     localDataSource = db.trackDao()
   )
 
   //singleton
   companion object {
+    private const val baseUrl = "https://itunes.apple.com"
+
     @Volatile
     private var instance: ITunesApi? = null
-    private const val baseUrl = "https://itunes.apple.com"
-    fun getInstance(application: Application): ITunesApi? {
-      if (instance == null) {
-        println("API is null, creating new instance.")
-        synchronized(ITunesApi::class.java) {
-          instance = ITunesApi(application)
-        }
-      }
-      return instance
+    fun getInstance(application: Application) = instance ?: synchronized(this) {
+      ITunesApi(application).also { instance = it }
     }
   }
 }

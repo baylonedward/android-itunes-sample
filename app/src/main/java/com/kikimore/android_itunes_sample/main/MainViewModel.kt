@@ -1,14 +1,10 @@
 package com.kikimore.android_itunes_sample.main
 
-import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.findNavController
-import com.kikimore.android_itunes_sample.R
 import com.kikimore.android_itunes_sample.data.entities.Track
 import com.kikimore.android_itunes_sample.data.utils.Resource
 import com.kikimore.android_itunes_sample.main.master.ListStrategy
-import com.kikimore.android_itunes_sample.main.master.MasterFragmentDirections
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import java.util.*
@@ -19,7 +15,7 @@ import java.util.*
  */
 @ExperimentalCoroutinesApi
 class MainViewModel(
-  private val api: ITunesApi?
+  private val api: ITunesApi
 ) : ViewModel(), ListStrategy {
 
   private var tracks: List<Track>? = null
@@ -30,19 +26,19 @@ class MainViewModel(
   fun getTracks() {
     val query = "star"
     val country = "au"
-    api?.iTunesRepository?.getMovieByCountry(query, country)
-      ?.distinctUntilChanged()
-      ?.catch { trackListState.value = Resource.error(it.message!!) }
-      ?.onEach {
+    api.iTunesRepository.getMovieByCountry(query, country)
+      .distinctUntilChanged()
+      .catch { trackListState.value = Resource.error(it.message!!) }
+      .onEach {
         trackListState.value = it
         it.data?.also { tracks ->
           this.tracks = tracks.sortedBy { it.trackName }
           // select first track by default for master detail view
-          if (!this.tracks.isNullOrEmpty()){
+          if (!this.tracks.isNullOrEmpty()) {
             selectedTrack.value = this.tracks?.get(0)
           }
         }
-      }?.launchIn(viewModelScope)
+      }.launchIn(viewModelScope)
   }
 
   private fun getTrack(position: Int) = tracks?.get(position)

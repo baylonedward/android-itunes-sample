@@ -25,7 +25,7 @@ import java.util.*
 @ExperimentalCoroutinesApi
 class DetailFragment : Fragment() {
 
-  private val api by lazy { ITunesApi(requireActivity().applicationContext) }
+  private val api by lazy { ITunesApi.getInstance(requireActivity().application) }
   private val viewModel by lazy { requireActivity().fetchViewModel { MainViewModel(api) } }
 
   override fun onCreateView(

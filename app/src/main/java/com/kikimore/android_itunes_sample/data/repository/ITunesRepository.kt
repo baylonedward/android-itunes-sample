@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
  */
 
 @ExperimentalCoroutinesApi
-class ITunesRepository(
+class ITunesRepository private constructor(
   private val remoteDataSource: ITunesRemoteDataSource,
   private val localDataSource: TrackDao
 ) {
@@ -26,7 +26,20 @@ class ITunesRepository(
     return performGetOperation(
       databaseQuery = { localDataSource.all() },
       networkCall = { remoteDataSource.getMovieByCountry(map) },
-      saveCallResult ={ localDataSource.insert(it.results) }
+      saveCallResult = { localDataSource.insert(it.results) }
     )
+  }
+
+  //singleton
+  companion object {
+    @Volatile
+    private var instance: ITunesRepository? = null
+    fun getInstance(
+      remoteDataSource: ITunesRemoteDataSource,
+      localDataSource: TrackDao
+    ) = instance ?: synchronized(this){
+      println("Repository is null, creating new instance.")
+      ITunesRepository(remoteDataSource, localDataSource).also { instance = it }
+    }
   }
 }

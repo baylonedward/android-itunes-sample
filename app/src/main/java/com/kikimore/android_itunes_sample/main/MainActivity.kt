@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.onEach
 @ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity() {
 
-  private val api by lazy { ITunesApi(this) }
+  private val api by lazy { ITunesApi.getInstance(application) }
   private val viewModel by lazy { fetchViewModel { MainViewModel(api) } }
   private val isTablet by lazy { resources?.getBoolean(R.bool.isTablet) ?: false }
 
