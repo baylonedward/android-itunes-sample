@@ -14,7 +14,7 @@ import com.kikimore.android_itunes_sample.data.entities.Track
  */
 @Database(
   entities = [Track::class],
-  version = 2,
+  version = 3,
   exportSchema = false
 )
 abstract class ITunesDatabase : RoomDatabase() {

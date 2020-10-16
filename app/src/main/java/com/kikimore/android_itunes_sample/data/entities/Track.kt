@@ -14,7 +14,7 @@ data class Track(
   @SerializedName("collectionId") val id: Int,
   val trackName: String,
   @SerializedName("artworkUrl100") val artWork: String,
-  @SerializedName("trackPrice") val price: String,
+  @SerializedName("trackPrice") val price: String?,
   @SerializedName("primaryGenreName") val genre: String,
   val currency: String,
   val longDescription: String,
