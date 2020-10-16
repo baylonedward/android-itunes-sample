@@ -20,8 +20,8 @@ class MainViewModel(
 
   private var tracks: List<Track>? = null
   val trackListState = MutableStateFlow<Resource<List<Track>>?>(null)
-  var selectedTrack = MutableStateFlow<Track?>(null)
-  var onSelect = MutableStateFlow<Boolean?>(null)
+  val selectedTrack = MutableStateFlow<Track?>(null)
+  val onSelect = MutableStateFlow<Boolean?>(null)
 
   fun getTracks() {
     val query = "star"
@@ -35,7 +35,7 @@ class MainViewModel(
           this.tracks = tracks.sortedBy { it.trackName }
           // select first track by default for master detail view
           if (!this.tracks.isNullOrEmpty()) {
-            selectedTrack.value = this.tracks?.get(0)
+            selectedTrack.value = selectedTrack.value ?: this.tracks?.get(0)
           }
         }
       }.launchIn(viewModelScope)
