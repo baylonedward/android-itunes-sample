@@ -24,6 +24,10 @@ It is also a lot easier to construct and follow the Single Responsibility Princi
 2. ViewModel - mediates between the View and Model, and mostly contains the business logic.
 3. View - represents the UI layer and listens for state changes from the ViewModel.
 
+### Dependency Injection
+
+Used Android's Hilt to automated dependency Injection
+
 ### Navigation
 
 I used the Single Activity architecture and Navigation Component
