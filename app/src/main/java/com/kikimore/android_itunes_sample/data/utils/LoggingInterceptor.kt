@@ -1,30 +1,28 @@
 package com.kikimore.android_itunes_sample.data.utils
 
 import okhttp3.Interceptor
-import okhttp3.OkHttpClient
+import okhttp3.Response
+import javax.inject.Inject
 
 /**
  * Created by: ebaylon.
- * Created on: 25/07/2020.
- *
- * Interceptor to log network requests
+ * Created on: 19/10/2020.
  */
-
-fun OkHttpClient.Builder.loggingInterceptor(): OkHttpClient.Builder {
-  val loggingInterceptor = Interceptor {
-    val chainRequest = it.request()
+class LoggingInterceptor @Inject constructor() : Interceptor {
+  override fun intercept(chain: Interceptor.Chain): Response {
+    val chainRequest = chain.request()
     //request
     val requestTime = System.nanoTime()
     println(
       String.format(
         "Sending request %s on %s%n%s",
         chainRequest.url(),
-        it.connection(),
+        chain.connection(),
         chainRequest.headers()
       )
     )
     //response
-    val response = it.proceed(chainRequest)
+    val response = chain.proceed(chainRequest)
     val responseTime = System.nanoTime()
     println(
       String.format(
@@ -36,9 +34,6 @@ fun OkHttpClient.Builder.loggingInterceptor(): OkHttpClient.Builder {
     //log network response
     val networkResponse = response.networkResponse()
     println(networkResponse)
-    return@Interceptor response
+    return response
   }
-
-  this.addInterceptor(loggingInterceptor)
-  return this
 }

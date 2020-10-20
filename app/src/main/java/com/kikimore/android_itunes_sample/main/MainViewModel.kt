@@ -1,8 +1,10 @@
 package com.kikimore.android_itunes_sample.main
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kikimore.android_itunes_sample.data.entities.Track
+import com.kikimore.android_itunes_sample.data.repository.ITunesRepository
 import com.kikimore.android_itunes_sample.data.utils.Resource
 import com.kikimore.android_itunes_sample.main.master.ListStrategy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,9 +16,8 @@ import java.util.*
  * Created on: 16/09/2020.
  */
 @ExperimentalCoroutinesApi
-class MainViewModel(
-  private val api: ITunesApi
-) : ViewModel(), ListStrategy {
+class MainViewModel @ViewModelInject constructor(private val repository: ITunesRepository) :
+  ViewModel(), ListStrategy {
 
   private var tracks: List<Track>? = null
   val trackListState = MutableStateFlow<Resource<List<Track>>?>(null)
@@ -26,7 +27,7 @@ class MainViewModel(
   fun getTracks() {
     val query = "star"
     val country = "au"
-    api.iTunesRepository.getMovieByCountry(query, country)
+    repository.getMovieByCountry(query, country)
       .distinctUntilChanged()
       .catch { trackListState.value = Resource.error(it.message!!) }
       .onEach {

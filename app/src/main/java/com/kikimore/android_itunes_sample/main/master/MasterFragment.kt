@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.kikimore.android_itunes_sample.R
 import com.kikimore.android_itunes_sample.data.utils.Resource
-import com.kikimore.android_itunes_sample.main.ITunesApi
 import com.kikimore.android_itunes_sample.main.MainViewModel
-import com.kikimore.android_itunes_sample.utils.fetchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,12 +23,18 @@ import kotlinx.coroutines.flow.onEach
  * Created on: 16/09/2020.
  */
 @ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class MasterFragment : Fragment() {
 
-  private val api by lazy { ITunesApi.getInstance(requireActivity().application) }
-  private val viewModel by lazy { requireActivity().fetchViewModel { MainViewModel(api) } }
+  private val viewModel: MainViewModel by activityViewModels()
   private val listAdapter by lazy { ListAdapter(viewModel) }
   private val isTablet by lazy { context?.resources?.getBoolean(R.bool.isTablet) ?: false }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    // fetch data
+    viewModel.getTracks()
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,

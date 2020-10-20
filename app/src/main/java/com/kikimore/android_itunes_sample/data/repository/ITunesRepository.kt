@@ -7,6 +7,7 @@ import com.kikimore.android_itunes_sample.data.utils.Resource
 import com.kikimore.android_itunes_sample.data.utils.performGetOperation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
  * Created by: ebaylon.
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
  */
 
 @ExperimentalCoroutinesApi
-class ITunesRepository private constructor(
+class ITunesRepository @Inject constructor(
   private val remoteDataSource: ITunesRemoteDataSource,
   private val localDataSource: TrackDao
 ) {

@@ -8,8 +8,8 @@ import com.kikimore.android_itunes_sample.data.local.ITunesDatabase
 import com.kikimore.android_itunes_sample.data.remote.ITunesRemoteDataSource
 import com.kikimore.android_itunes_sample.data.remote.ITunesService
 import com.kikimore.android_itunes_sample.data.repository.ITunesRepository
+import com.kikimore.android_itunes_sample.data.utils.LoggingInterceptor
 import com.kikimore.android_itunes_sample.data.utils.Resource
-import com.kikimore.android_itunes_sample.data.utils.loggingInterceptor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
@@ -44,7 +44,7 @@ class RepositoryTest {
     val country = "au"
     runBlocking {
       launch {
-        testSetup.iTunesRepository.getMovieByCountry(query, country)?.collect {
+        testSetup.iTunesRepository.getMovieByCountry(query, country).collect {
           when (it.status) {
             Resource.Status.LOADING -> {
               Assert.assertNull(it.data)
@@ -73,10 +73,11 @@ class TestSetup {
   private val context = ApplicationProvider.getApplicationContext<Context>()
   private val db = Room.inMemoryDatabaseBuilder(context, ITunesDatabase::class.java).build()
   private val baseUrl = "https://itunes.apple.com"
+  private val okHttpClient = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
   private val retrofit = Retrofit.Builder()
     .baseUrl(baseUrl)
     .addConverterFactory(GsonConverterFactory.create())
-    .client(OkHttpClient.Builder().loggingInterceptor().build())
+    .client(okHttpClient)
     .build()
   private val iTunesService = retrofit.create(ITunesService::class.java)
   private val iTunesRemoteDataSource = ITunesRemoteDataSource(iTunesService)

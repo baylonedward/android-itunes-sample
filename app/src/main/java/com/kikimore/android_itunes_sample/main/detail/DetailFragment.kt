@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.kikimore.android_itunes_sample.R
 import com.kikimore.android_itunes_sample.data.entities.Track
-import com.kikimore.android_itunes_sample.main.ITunesApi
 import com.kikimore.android_itunes_sample.main.MainViewModel
-import com.kikimore.android_itunes_sample.utils.fetchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
@@ -23,10 +23,10 @@ import java.util.*
  * Created on: 16/09/2020.
  */
 @ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-  private val api by lazy { ITunesApi.getInstance(requireActivity().application) }
-  private val viewModel by lazy { requireActivity().fetchViewModel { MainViewModel(api) } }
+  private val viewModel: MainViewModel by activityViewModels()
 
   override fun onCreateView(
     inflater: LayoutInflater,
