@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.kikimore.android_itunes_sample.R
 import com.kikimore.android_itunes_sample.data.entities.Track
@@ -15,8 +14,6 @@ import com.kikimore.android_itunes_sample.utils.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import java.util.*
 
 /**
@@ -40,6 +37,13 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
     viewModel.selectedTrack.observe(viewLifecycleOwner) {
       if (it == null) return@observe
       setDetails(it, view)
+    }
+    // if not tablet show toolbar
+    binding.appBarLayout.visibility = if (viewModel.isTabletMode()) View.GONE else View.VISIBLE
+    // set toolbar
+    binding.toolbar.apply {
+      title = viewModel.getQueryString()
+      setNavigationOnClickListener { viewModel.popBackStack() }
     }
   }
 

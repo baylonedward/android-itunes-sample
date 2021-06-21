@@ -75,7 +75,6 @@ class MasterFragment : BaseFragment<FragmentMasterBinding>() {
   private fun setObservers() {
     // list state
     viewModel.trackListState.onEach { state ->
-      println("Track List: ${state?.data?.size}")
       if (state == null) return@onEach
       when (state.status) {
         Resource.Status.SUCCESS -> {
@@ -89,7 +88,6 @@ class MasterFragment : BaseFragment<FragmentMasterBinding>() {
           state.message?.also { toast(it) }
         }
       }
-      listAdapter.notifyDataSetChanged()
     }.launchIn(lifecycleScope)
   }
 

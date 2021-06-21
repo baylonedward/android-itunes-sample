@@ -10,7 +10,9 @@ import com.kikimore.android_itunes_sample.databinding.ActivityMainBinding
 import com.kikimore.android_itunes_sample.main.master.MasterFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -28,7 +30,8 @@ class MainActivity : AppCompatActivity() {
     if (!viewModel.isTabletMode())
       viewModel.navigation.observe(this) { navigation ->
         if (navigation == null) return@observe
-        navigation.navDirection?.also { navController.navigate(it) }
+        if (navigation == MainNavigation.PopBackStack) navController.popBackStack()
+        else navigation.navDirection?.also { navController.navigate(it) }
       }
   }
 
@@ -36,6 +39,8 @@ class MainActivity : AppCompatActivity() {
    * class to contain all [NavDirections] of main navigation graph
    */
   sealed class MainNavigation(val navDirection: NavDirections? = null) {
+    object PopBackStack : MainNavigation()
+
     object MasterToDetail :
       MainNavigation(MasterFragmentDirections.actionNavigationMasterToDetail())
   }

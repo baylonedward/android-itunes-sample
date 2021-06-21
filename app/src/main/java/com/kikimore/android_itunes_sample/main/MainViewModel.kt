@@ -47,6 +47,7 @@ class MainViewModel
   val navigation: LiveData<MainActivity.MainNavigation?> = _navigation
 
   // search
+  private var searchQuery: String? = null
   private var searchJob: Job? = null
 
   /**
@@ -82,17 +83,20 @@ class MainViewModel
    */
   fun searchTracks(query: String?) {
     if (query == null || query.count() < 3) return
+    searchQuery = query
     val country = "au"
     viewModelScope.launch {
       if (searchJob != null) searchJob?.cancelAndJoin()
       searchJob = repository.getMovieByCountry(query, country)
         .onStart { _trackListState.value = Resource.loading() }
-        //.distinctUntilChanged()
         .onEach { _trackListState.value = it }
         .launchIn(viewModelScope)
     }
   }
 
+  /**
+   * Set list of tracks
+   */
   fun setTracks(tracks: List<Track>?) {
     this.tracks = tracks?.sortedBy { it.trackName }
     // select first track by default for master detail view
@@ -101,6 +105,11 @@ class MainViewModel
       _selectedTrack.value = _selectedTrack.value ?: this.tracks?.get(0)
     }
   }
+
+  /**
+   * Get query string
+   */
+  fun getQueryString() = searchQuery
 
   /**
    * Method for checking tablet mode
@@ -112,5 +121,9 @@ class MainViewModel
    */
   private fun navigateFromMasterToDetail() {
     _navigation.value = MainActivity.MainNavigation.MasterToDetail
+  }
+
+  fun popBackStack() {
+    _navigation.value = MainActivity.MainNavigation.PopBackStack
   }
 }
