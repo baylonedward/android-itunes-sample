@@ -28,7 +28,6 @@ class MasterFragment : BaseFragment<FragmentMasterBinding>() {
 
   private val viewModel: MainViewModel by activityViewModels()
   private val listAdapter by lazy { ListAdapter(viewModel) }
-  private val isTablet by lazy { context?.resources?.getBoolean(R.bool.isTablet) ?: false }
 
   override fun setBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMasterBinding {
     return FragmentMasterBinding.inflate(layoutInflater)
@@ -44,7 +43,7 @@ class MasterFragment : BaseFragment<FragmentMasterBinding>() {
     super.onViewCreated(view, savedInstanceState)
     setListView()
     setObservers()
-    if (isTablet) displayDetailLayout() // display detail fragment on Tablet mode
+    if (viewModel.isTabletMode()) displayDetailLayout() // display detail fragment on Tablet mode
   }
 
   private fun setListView() {

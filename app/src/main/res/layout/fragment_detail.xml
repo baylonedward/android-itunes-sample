@@ -14,7 +14,7 @@
     <ImageView
       android:id="@+id/imageView"
       android:layout_width="92dp"
-      android:layout_height="132dp"
+      android:layout_height="148dp"
       android:scaleType="fitXY"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +28,7 @@
       android:layout_marginTop="8dp"
       android:textAlignment="viewStart"
       android:textColor="@color/colorPrimaryDark"
-      android:textSize="24sp"
+      android:textSize="20sp"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -37,10 +37,12 @@
 
     <TextView
       android:id="@+id/genreTextView"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:textSize="20sp"
+      android:textSize="16sp"
       android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="@+id/trackNameTextView"
+      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="@+id/trackNameTextView"
       app:layout_constraintTop_toBottomOf="@+id/trackNameTextView"
       tools:text="Drama" />
@@ -49,17 +51,20 @@
       android:id="@+id/priceTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textSize="16sp"
+      android:layout_marginBottom="75dp"
+      android:textSize="14sp"
       android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="@+id/imageView"
       app:layout_constraintStart_toStartOf="@+id/genreTextView"
       app:layout_constraintTop_toBottomOf="@+id/genreTextView"
+      app:layout_constraintVertical_bias="0.0"
       tools:text="$ 14.99" />
 
     <TextView
       android:id="@+id/longDescTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+      android:layout_marginTop="16dp"
       android:textAlignment="viewStart"
       android:textColor="@color/thunder"
       android:textSize="16sp"
