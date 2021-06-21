@@ -8,6 +8,7 @@ import com.kikimore.android_itunes_sample.data.utils.performGetOperation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by: ebaylon.
@@ -17,6 +18,7 @@ import javax.inject.Inject
  */
 
 @ExperimentalCoroutinesApi
+@Singleton
 class ITunesRepository @Inject constructor(
   private val remoteDataSource: ITunesRemoteDataSource,
   private val localDataSource: TrackDao
@@ -29,18 +31,5 @@ class ITunesRepository @Inject constructor(
       networkCall = { remoteDataSource.getMovieByCountry(map) },
       saveCallResult = { localDataSource.insert(it.results) }
     )
-  }
-
-  //singleton
-  companion object {
-    @Volatile
-    private var instance: ITunesRepository? = null
-    fun getInstance(
-      remoteDataSource: ITunesRemoteDataSource,
-      localDataSource: TrackDao
-    ) = instance ?: synchronized(this){
-      println("Repository is null, creating new instance.")
-      ITunesRepository(remoteDataSource, localDataSource).also { instance = it }
-    }
   }
 }

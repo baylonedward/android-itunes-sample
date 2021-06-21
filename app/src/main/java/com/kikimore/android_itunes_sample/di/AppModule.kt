@@ -7,14 +7,12 @@ import com.kikimore.android_itunes_sample.data.local.ITunesDatabase
 import com.kikimore.android_itunes_sample.data.local.TrackDao
 import com.kikimore.android_itunes_sample.data.remote.ITunesRemoteDataSource
 import com.kikimore.android_itunes_sample.data.remote.ITunesService
-import com.kikimore.android_itunes_sample.data.repository.ITunesRepository
 import com.kikimore.android_itunes_sample.data.utils.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -71,15 +69,5 @@ class AppModule {
   @Provides
   fun provideTrackDao(db: ITunesDatabase): TrackDao {
     return db.trackDao()
-  }
-
-  @ExperimentalCoroutinesApi
-  @Singleton
-  @Provides
-  fun provideITunesRepository(
-    remoteDataSource: ITunesRemoteDataSource,
-    localDataSource: TrackDao
-  ): ITunesRepository {
-    return ITunesRepository.getInstance(remoteDataSource, localDataSource)
   }
 }
