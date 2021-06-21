@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.kikimore.android_itunes_sample.R
 import com.kikimore.android_itunes_sample.data.entities.Track
+import com.kikimore.android_itunes_sample.databinding.FragmentDetailBinding
 import com.kikimore.android_itunes_sample.main.MainViewModel
+import com.kikimore.android_itunes_sample.utils.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -24,16 +24,12 @@ import java.util.*
  */
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class DetailFragment : Fragment() {
+class DetailFragment : BaseFragment<FragmentDetailBinding>() {
 
   private val viewModel: MainViewModel by activityViewModels()
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.fragment_detail, container, false)
+  override fun setBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentDetailBinding {
+    return FragmentDetailBinding.inflate(layoutInflater)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,15 +47,15 @@ class DetailFragment : Fragment() {
       .load(track.artWork)
       .centerInside()
       .placeholder(R.drawable.ic_movie_placeholder)
-      .into(view.imageView)
+      .into(binding.imageView)
     // track name
-    view.trackNameTextView.text = track.trackName
+    binding.trackNameTextView.text = track.trackName
     // genre
-    view.genreTextView.text = track.genre
+    binding.genreTextView.text = track.genre
     //price
     val currency = Currency.getInstance(track.currency).symbol
-    view.priceTextView.text = "$currency ${track.price}"
+    binding.priceTextView.text = "$currency ${track.price}"
     // description
-    view.longDescTextView.text = track.longDescription
+    binding.longDescTextView.text = track.longDescription
   }
 }

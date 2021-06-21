@@ -41,7 +41,7 @@
     app:layout_constraintVertical_bias="0.0"
     tools:listitem="@layout/track_list_item" />
 
-  <fragment
+  <androidx.fragment.app.FragmentContainerView
     android:id="@+id/detail_nav_container"
     android:name="androidx.navigation.fragment.NavHostFragment"
     android:layout_width="0dp"

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.kikimore.android_itunes_sample.R
-import kotlinx.android.synthetic.main.track_list_item.view.*
+import com.kikimore.android_itunes_sample.databinding.TrackListItemBinding
 
 /**
  * Created by: ebaylon.
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.track_list_item.view.*
  */
 
 class ListAdapter(private val listItemStrategy: ListStrategy) :
-  RecyclerView.Adapter<ListAdapter.ItemViewHolder>() {
+  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
   /**
    * Interface of List item functions
@@ -28,25 +28,24 @@ class ListAdapter(private val listItemStrategy: ListStrategy) :
     fun onSelect(position: Int): () -> Unit
   }
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-    val layoutInflater = LayoutInflater.from(parent.context)
-    val view = layoutInflater.inflate(R.layout.track_list_item, parent, false)
-    return ItemViewHolder(view)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    return ItemViewHolder.newInstance(parent)
   }
 
-  override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-    holder.onBind(
-      listItemStrategy.getImageUrl(position),
-      listItemStrategy.getTrackName(position),
-      listItemStrategy.getGenre(position),
-      listItemStrategy.getPrice(position),
-      listItemStrategy.onSelect(position)
-    )
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    if (holder is ItemViewHolder)
+      holder.onBind(
+        listItemStrategy.getImageUrl(position),
+        listItemStrategy.getTrackName(position),
+        listItemStrategy.getGenre(position),
+        listItemStrategy.getPrice(position),
+        listItemStrategy.onSelect(position)
+      )
   }
 
   override fun getItemCount(): Int = listItemStrategy.getListCount()
 
-  inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  private class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun onBind(
       imageUrl: String?,
       trackName: String,
@@ -54,20 +53,30 @@ class ListAdapter(private val listItemStrategy: ListStrategy) :
       price: String,
       onSelect: () -> Unit
     ) {
-      // image url
-      Glide.with(itemView)
-        .load(imageUrl)
-        .centerInside()
-        .placeholder(R.drawable.ic_movie_placeholder)
-        .into(itemView.imageView)
-      // track name
-      itemView.trackNameTextView.text = trackName
-      // genre
-      itemView.genreTextView.text = genre
-      // price
-      itemView.priceTextView.text = price
-      // on select
-      itemView.trackItemContainer.setOnClickListener { onSelect() }
+      TrackListItemBinding.bind(itemView).apply {
+        // image url
+        Glide.with(root)
+          .load(imageUrl)
+          .centerInside()
+          .placeholder(R.drawable.ic_movie_placeholder)
+          .into(imageView)
+        // track name
+        trackNameTextView.text = trackName
+        // genre
+        genreTextView.text = genre
+        // price
+        priceTextView.text = price
+        // on select
+        trackItemContainer.setOnClickListener { onSelect() }
+      }
+    }
+
+    companion object {
+      const val layoutId = R.layout.track_list_item
+      fun newInstance(parent: ViewGroup): ItemViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
+        return ItemViewHolder(view)
+      }
     }
   }
 }

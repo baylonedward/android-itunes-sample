@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.RecyclerView
 import com.kikimore.android_itunes_sample.R
 import com.kikimore.android_itunes_sample.data.utils.Resource
+import com.kikimore.android_itunes_sample.databinding.FragmentMasterBinding
 import com.kikimore.android_itunes_sample.main.MainViewModel
+import com.kikimore.android_itunes_sample.utils.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
@@ -24,11 +24,15 @@ import kotlinx.coroutines.flow.onEach
  */
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class MasterFragment : Fragment() {
+class MasterFragment : BaseFragment<FragmentMasterBinding>() {
 
   private val viewModel: MainViewModel by activityViewModels()
   private val listAdapter by lazy { ListAdapter(viewModel) }
   private val isTablet by lazy { context?.resources?.getBoolean(R.bool.isTablet) ?: false }
+
+  override fun setBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMasterBinding {
+    return FragmentMasterBinding.inflate(layoutInflater)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -36,24 +40,15 @@ class MasterFragment : Fragment() {
     viewModel.getTracks()
   }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    // inflate layout according to screen type
-    return inflater.inflate(R.layout.fragment_master, container, false)
-  }
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    setListView(view.findViewById(R.id.trackListView))
+    setListView()
     setObservers()
     if (isTablet) displayDetailLayout() // display detail fragment on Tablet mode
   }
 
-  private fun setListView(recyclerView: RecyclerView) {
-    recyclerView.adapter = listAdapter
+  private fun setListView() {
+    binding.trackListView.adapter = listAdapter
   }
 
   private fun displayDetailLayout() {
@@ -64,9 +59,9 @@ class MasterFragment : Fragment() {
 
   private fun setObservers() {
     // list state
-    viewModel.trackListState.onEach {
-      if (it == null) return@onEach
-      when (it.status) {
+    viewModel.trackListState.onEach { state ->
+      if (state == null) return@onEach
+      when (state.status) {
         Resource.Status.SUCCESS -> {
           listAdapter.notifyDataSetChanged()
         }
@@ -74,7 +69,7 @@ class MasterFragment : Fragment() {
           toast("Loading")
         }
         Resource.Status.ERROR -> {
-          toast(it.message!!)
+          state.message?.also { toast(it) }
         }
       }
     }.launchIn(lifecycleScope)
