@@ -82,7 +82,7 @@ class TestSetup {
   private val iTunesService = retrofit.create(ITunesService::class.java)
   private val iTunesRemoteDataSource = ITunesRemoteDataSource(iTunesService)
 
-  val iTunesRepository = ITunesRepository.getInstance(
+  val iTunesRepository = ITunesRepository(
     localDataSource = db.trackDao(),
     remoteDataSource = iTunesRemoteDataSource
   )

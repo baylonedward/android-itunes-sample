@@ -1,5 +1,5 @@
 # android-itunes-sample
-an iTunes client for android – the app searches for "star" content.
+an iTunes client for android – the app searches for movie content within Australia.
 
 ## UI and Design
 
@@ -21,8 +21,8 @@ The choice was made by as this is the recommended patter from Google's jetpack a
 It is also a lot easier to construct and follow the Single Responsibility Principle.
 
 1. Model - represents the data layer of application which contains source of data.
-2. ViewModel - mediates between the View and Model, and mostly contains the business logic.
-3. View - represents the UI layer and listens for state changes from the ViewModel.
+2. View - represents the UI layer and listens for state changes from the ViewModel.
+3. ViewModel - mediates between the View and Model, and mostly contains the business logic.
 
 ### Dependency Injection
 
@@ -33,12 +33,15 @@ Used Android's Hilt to automated dependency Injection
 I used the Single Activity architecture and Navigation Component
 from Jetpack's architecture component to implement screen navigations.
 
+I also implemeted a Coordinator like pattern for navigation where the activity handles all screen traversal
+and listens to navigation changes thru an activity-wide viewModel.
+
 ### Programming
 
 I implemented the observer pattern using kotlin coroutines' Flow.
 
 Used kotlin's suspending function feature for easier implementation  
-of threading and asynchronous task.
+of coroutines for threading and asynchronous task.
 
 ## Persistence
 
@@ -67,6 +70,8 @@ Consumed using Retrofit Network Library and mapped data using GSON.
 Created a service with 1 function:
 
 1. getMovieByCountry() - which accept a map of key-values pairs like term, country, and media.
+
+By default, search field has "Star" value, so "Star" related movies are initially shown.
 
 ### Tests
 I made unit testing for both network api call and repository since I
