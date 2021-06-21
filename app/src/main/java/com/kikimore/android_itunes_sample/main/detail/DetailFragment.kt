@@ -58,7 +58,7 @@ class DetailFragment : Fragment() {
     view.genreTextView.text = track.genre
     //price
     val currency = Currency.getInstance(track.currency).symbol
-    view.priceTextView.text = " - $currency ${track.price}"
+    view.priceTextView.text = "$currency ${track.price}"
     // description
     view.longDescTextView.text = track.longDescription
   }
