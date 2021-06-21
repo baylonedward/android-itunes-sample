@@ -13,20 +13,21 @@ import kotlinx.android.synthetic.main.track_list_item.view.*
  * Created on: 16/09/2020.
  */
 
-/**
- * Interface of List item functions
- */
-interface ListStrategy {
-  fun getListCount(): Int
-  fun getImageUrl(position: Int): String?
-  fun getTrackName(position: Int): String
-  fun getGenre(position: Int): String
-  fun getPrice(position: Int): String
-  fun onSelect(position: Int): () -> Unit
-}
-
 class ListAdapter(private val listItemStrategy: ListStrategy) :
   RecyclerView.Adapter<ListAdapter.ItemViewHolder>() {
+
+  /**
+   * Interface of List item functions
+   */
+  interface ListStrategy {
+    fun getListCount(): Int
+    fun getImageUrl(position: Int): String?
+    fun getTrackName(position: Int): String
+    fun getGenre(position: Int): String
+    fun getPrice(position: Int): String
+    fun onSelect(position: Int): () -> Unit
+  }
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
     val view = layoutInflater.inflate(R.layout.track_list_item, parent, false)

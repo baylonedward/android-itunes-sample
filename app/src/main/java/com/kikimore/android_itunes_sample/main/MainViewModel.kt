@@ -1,23 +1,25 @@
 package com.kikimore.android_itunes_sample.main
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kikimore.android_itunes_sample.data.entities.Track
 import com.kikimore.android_itunes_sample.data.repository.ITunesRepository
 import com.kikimore.android_itunes_sample.data.utils.Resource
-import com.kikimore.android_itunes_sample.main.master.ListStrategy
+import com.kikimore.android_itunes_sample.main.master.ListAdapter
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by: ebaylon.
  * Created on: 16/09/2020.
  */
 @ExperimentalCoroutinesApi
-class MainViewModel @ViewModelInject constructor(private val repository: ITunesRepository) :
-  ViewModel(), ListStrategy {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val repository: ITunesRepository) :
+  ViewModel(), ListAdapter.ListStrategy {
 
   private var tracks: List<Track>? = null
   val trackListState = MutableStateFlow<Resource<List<Track>>?>(null)
@@ -43,6 +45,10 @@ class MainViewModel @ViewModelInject constructor(private val repository: ITunesR
   }
 
   private fun getTrack(position: Int) = tracks?.get(position)
+
+  /**
+   * [ListAdapter.ListStrategy] methods
+   */
 
   override fun getListCount(): Int = tracks?.size ?: 0
 
