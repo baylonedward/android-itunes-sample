@@ -7,6 +7,7 @@ import com.kikimore.android_itunes_sample.data.local.ITunesDatabase
 import com.kikimore.android_itunes_sample.data.local.TrackDao
 import com.kikimore.android_itunes_sample.data.remote.ITunesRemoteDataSource
 import com.kikimore.android_itunes_sample.data.remote.ITunesService
+import com.kikimore.android_itunes_sample.data.repository.UserSessionRepository
 import com.kikimore.android_itunes_sample.data.utils.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
@@ -70,4 +71,14 @@ class AppModule {
   fun provideTrackDao(db: ITunesDatabase): TrackDao {
     return db.trackDao()
   }
+
+  @Provides
+  @Singleton
+  fun provideUserSessionRepository(@ApplicationContext context: Context) =
+    UserSessionRepository.getInstance(
+      context.getSharedPreferences(
+        UserSessionRepository.PREFERENCE_NAME,
+        Context.MODE_PRIVATE
+      )
+    )
 }

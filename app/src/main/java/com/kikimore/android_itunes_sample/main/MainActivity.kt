@@ -1,6 +1,7 @@
 package com.kikimore.android_itunes_sample.main
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavDirections
@@ -33,6 +34,21 @@ class MainActivity : AppCompatActivity() {
         if (navigation == MainNavigation.PopBackStack) navController.popBackStack()
         else navigation.navDirection?.also { navController.navigate(it) }
       }
+
+    // show last visit date
+    println("Last: ${viewModel.getLastVisitDateTime()}")
+    viewModel.getLastVisitDateTime()?.also {
+      toast(getString(R.string.last_visited, it))
+    }
+  }
+
+  override fun onPause() {
+    super.onPause()
+    viewModel.setLastVisitDateTime()
+  }
+
+  private fun toast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG)?.show()
   }
 
   /**

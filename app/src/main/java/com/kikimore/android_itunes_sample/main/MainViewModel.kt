@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.kikimore.android_itunes_sample.R
 import com.kikimore.android_itunes_sample.data.entities.Track
 import com.kikimore.android_itunes_sample.data.repository.ITunesRepository
+import com.kikimore.android_itunes_sample.data.repository.UserSessionRepository
 import com.kikimore.android_itunes_sample.data.utils.Resource
 import com.kikimore.android_itunes_sample.main.master.ListAdapter
 import com.kikimore.android_itunes_sample.utils.SingleLiveData
@@ -29,6 +30,7 @@ import javax.inject.Inject
 class MainViewModel
 @Inject constructor(
   private val repository: ITunesRepository,
+  private val userSessionRepository: UserSessionRepository,
   @ApplicationContext private val context: Context
 ) : ViewModel(), ListAdapter.ListStrategy {
   // track list
@@ -115,6 +117,13 @@ class MainViewModel
    * Method for checking tablet mode
    */
   fun isTabletMode(): Boolean = context.resources?.getBoolean(R.bool.isTablet) ?: false
+
+  /**
+   * Session methods
+   */
+  fun getLastVisitDateTime() = userSessionRepository.getLastVisit()
+
+  fun setLastVisitDateTime() = userSessionRepository.setLastVisit()
 
   /**
    * [MainActivity.MainNavigation] Navigation methods
