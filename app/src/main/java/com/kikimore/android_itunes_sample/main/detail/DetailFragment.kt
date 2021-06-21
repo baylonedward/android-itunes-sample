@@ -14,6 +14,7 @@ import com.kikimore.android_itunes_sample.main.MainViewModel
 import com.kikimore.android_itunes_sample.utils.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.*
@@ -22,6 +23,7 @@ import java.util.*
  * Created by: ebaylon.
  * Created on: 16/09/2020.
  */
+@FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DetailFragment : BaseFragment<FragmentDetailBinding>() {
@@ -35,10 +37,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     // observe selected track
-    viewModel.selectedTrack.onEach {
-      if (it == null) return@onEach
+    viewModel.selectedTrack.observe(viewLifecycleOwner) {
+      if (it == null) return@observe
       setDetails(it, view)
-    }.launchIn(lifecycleScope)
+    }
   }
 
   private fun setDetails(track: Track, view: View) {

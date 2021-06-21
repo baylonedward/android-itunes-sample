@@ -6,37 +6,75 @@
   android:layout_height="match_parent"
   android:background="@color/colorAccent">
 
-  <TextView
-    android:id="@+id/textView"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appBarLayout"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:elevation="2dp"
-    android:paddingStart="16dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="8dp"
-    android:text="@string/master_title_header"
-    android:textColor="@color/colorPrimaryDark"
-    android:textSize="30sp"
-    android:textStyle="bold"
-    android:translationZ="2dp"
+    android:background="?attr/colorPrimary"
+    android:elevation="4dp"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/white"
+      app:contentInsetStart="0dp"
+      app:contentInsetStartWithNavigation="0dp">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <EditText
+          android:id="@+id/searchBarEditText"
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          android:autofillHints="@string/search"
+          android:background="@null"
+          android:focusable="true"
+          android:focusableInTouchMode="true"
+          android:hint="@string/search"
+          android:imeOptions="actionDone"
+          android:inputType="text"
+          android:maxLines="1"
+          android:paddingStart="16dp"
+          android:paddingEnd="8dp"
+          android:textCursorDrawable="@null"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/searchBarSearchImageView"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+          android:id="@+id/searchBarSearchImageView"
+          android:layout_width="wrap_content"
+          android:layout_height="0dp"
+          android:padding="16dp"
+          android:src="@drawable/ic_search"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
+  </com.google.android.material.appbar.AppBarLayout>
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/trackListView"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:layout_marginTop="2dp"
     android:background="@color/white"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/textView"
+    app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
     tools:listitem="@layout/track_list_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,5 +17,5 @@ data class Track(
   @SerializedName("trackPrice") val price: String?,
   @SerializedName("primaryGenreName") val genre: String,
   val currency: String,
-  val longDescription: String,
+  val longDescription: String?,
 )

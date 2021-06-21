@@ -18,4 +18,7 @@ interface TrackDao : BaseDao<Track> {
 
   @Query("DELETE FROM tracks")
   suspend fun deleteAll()
+
+  @Query("SELECT * FROM tracks WHERE trackName LIKE '%' || :query || '%' OR genre LIKE '%' || :query || '%'")
+  fun search(query: String): Flow<List<Track>>
 }

@@ -13,7 +13,7 @@ import com.kikimore.android_itunes_sample.main.master.ListAdapter
 import com.kikimore.android_itunes_sample.utils.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.*
 import javax.inject.Inject
@@ -22,6 +22,7 @@ import javax.inject.Inject
  * Created by: ebaylon.
  * Created on: 16/09/2020.
  */
+@FlowPreview
 @SuppressLint("StaticFieldLeak")
 @ExperimentalCoroutinesApi
 @HiltViewModel
@@ -30,13 +31,23 @@ class MainViewModel
   private val repository: ITunesRepository,
   @ApplicationContext private val context: Context
 ) : ViewModel(), ListAdapter.ListStrategy {
+  // track list
   private var tracks: List<Track>? = null
+
+  // track list state
   private val _trackListState = MutableStateFlow<Resource<List<Track>>?>(null)
   val trackListState: StateFlow<Resource<List<Track>>?> = _trackListState
-  private val _selectedTrack = MutableStateFlow<Track?>(null)
-  val selectedTrack: StateFlow<Track?> = _selectedTrack
+
+  // selected track
+  private val _selectedTrack = SingleLiveData<Track?>(null)
+  val selectedTrack: LiveData<Track?> = _selectedTrack
+
+  // navigation
   private val _navigation = SingleLiveData<MainActivity.MainNavigation?>(null)
   val navigation: LiveData<MainActivity.MainNavigation?> = _navigation
+
+  // search
+  private var searchJob: Job? = null
 
   /**
    * [ListAdapter.ListStrategy] methods
@@ -67,31 +78,34 @@ class MainViewModel
   private fun getTrack(position: Int) = tracks?.get(position)
 
   /**
-   * Get Tracks
+   * Search method
    */
-  fun getTracks() {
-    val query = "star"
+  fun searchTracks(query: String?) {
+    if (query == null || query.count() < 3) return
     val country = "au"
-    repository.getMovieByCountry(query, country)
-      .distinctUntilChanged()
-      .catch { _trackListState.value = Resource.error(it.message!!) }
-      .onEach { resource ->
-        _trackListState.value = resource
-        resource.data?.also { tracks ->
-          this.tracks = tracks.sortedBy { it.trackName }
-          // select first track by default for master detail view
-          if (!this.tracks.isNullOrEmpty()) {
-            _selectedTrack.value = selectedTrack.value ?: this.tracks?.get(0)
-          }
-        }
-      }.launchIn(viewModelScope)
+    viewModelScope.launch {
+      if (searchJob != null) searchJob?.cancelAndJoin()
+      searchJob = repository.getMovieByCountry(query, country)
+        .onStart { _trackListState.value = Resource.loading() }
+        //.distinctUntilChanged()
+        .onEach { _trackListState.value = it }
+        .launchIn(viewModelScope)
+    }
+  }
+
+  fun setTracks(tracks: List<Track>?) {
+    this.tracks = tracks?.sortedBy { it.trackName }
+    // select first track by default for master detail view
+    if (!this.tracks.isNullOrEmpty()) {
+      _selectedTrack.value = null
+      _selectedTrack.value = _selectedTrack.value ?: this.tracks?.get(0)
+    }
   }
 
   /**
    * Method for checking tablet mode
    */
   fun isTabletMode(): Boolean = context.resources?.getBoolean(R.bool.isTablet) ?: false
-
 
   /**
    * [MainActivity.MainNavigation] Navigation methods
