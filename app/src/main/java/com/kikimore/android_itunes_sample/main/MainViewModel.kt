@@ -49,14 +49,14 @@ class MainViewModel
   val navigation: LiveData<MainActivity.MainNavigation?> = _navigation
 
   // search
-  private var searchQuery: String? = null
+  private var searchQuery: String? = userSessionRepository.searchQuery
   private var searchJob: Job? = null
 
   /**
    * [ListAdapter.ListStrategy] methods
    */
 
-  override fun getListCount(): Int = tracks?.size ?: 0
+  override fun getListCount(): Int = tracks?.size ?: getDefaultItemCount()
 
   override fun getImageUrl(position: Int): String? = getTrack(position)?.artWork
 
@@ -78,13 +78,27 @@ class MainViewModel
     navigateFromMasterToDetail()
   }
 
-  private fun getTrack(position: Int) = tracks?.get(position)
+  override fun lastVisit(): String? {
+    return userSessionRepository.getLastVisit()
+  }
+
+  private fun getTrack(position: Int): Track? {
+    val finalPosition = if (position > 0) position - getDefaultItemCount() else position
+    return tracks?.get(finalPosition)
+  }
+
+  private fun getDefaultItemCount(): Int {
+    return if (lastVisit() != null) 1 else 0
+  }
 
   /**
    * Search method
    */
   fun searchTracks(query: String?) {
     if (query == null || query.count() < 3) return
+    // update last search query
+    userSessionRepository.searchQuery = query
+    // search
     searchQuery = query
     val country = "au"
     viewModelScope.launch {
@@ -101,10 +115,20 @@ class MainViewModel
    */
   fun setTracks(tracks: List<Track>?) {
     this.tracks = tracks?.sortedBy { it.trackName }
-    // select first track by default for master detail view
     if (!this.tracks.isNullOrEmpty()) {
-      _selectedTrack.value = null
-      _selectedTrack.value = _selectedTrack.value ?: this.tracks?.get(0)
+      val previouslySelectedId = userSessionRepository.openedCollectionId
+      if (previouslySelectedId != 0) {
+        this.tracks?.indexOfFirst { it.id == userSessionRepository.openedCollectionId }?.also {
+          onSelect(it + getDefaultItemCount()).invoke()
+          // reset opened collection
+          userSessionRepository.openedCollectionId = 0
+        }
+      } else {
+        // select first track by default for master detail view
+        if (isTabletMode()) {
+          onSelect(0).invoke()
+        }
+      }
     }
   }
 
@@ -117,6 +141,15 @@ class MainViewModel
    * Method for checking tablet mode
    */
   fun isTabletMode(): Boolean = context.resources?.getBoolean(R.bool.isTablet) ?: false
+
+  /**
+   * Save selected track
+   */
+  fun saveSelectedTrack() {
+    selectedTrack.value?.id?.also {
+      userSessionRepository.openedCollectionId = it
+    }
+  }
 
   /**
    * Session methods

@@ -24,6 +24,14 @@ class UserSessionRepository private constructor(private val sharedPreferences: S
     return formatter.format(this)
   }
 
+  var searchQuery: String?
+    get() = sharedPreferences.getString(SEARCH_QUERY, null)
+    set(value) = editor.putString(SEARCH_QUERY, value).apply()
+
+  var openedCollectionId: Int
+    get() = sharedPreferences.getInt(OPENED_COLLECTION_ID, 0)
+    set(value) = editor.putInt(OPENED_COLLECTION_ID, value).apply()
+
   fun getLastVisit() = lastVisitDateTime
 
   fun setLastVisit() {
@@ -33,6 +41,8 @@ class UserSessionRepository private constructor(private val sharedPreferences: S
 
   companion object {
     const val PREFERENCE_NAME: String = "iTunesSamplePref"
+    private const val SEARCH_QUERY = "searchQuery"
+    private const val OPENED_COLLECTION_ID = "openedCollectionId"
     private const val LAST_VISIT_KEY = "idKey"
     private const val DATE_FORMAT = "yyyy/MM/dd HH:mm:ss"
 

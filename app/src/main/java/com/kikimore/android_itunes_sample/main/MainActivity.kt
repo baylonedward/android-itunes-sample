@@ -34,21 +34,19 @@ class MainActivity : AppCompatActivity() {
         if (navigation == MainNavigation.PopBackStack) navController.popBackStack()
         else navigation.navDirection?.also { navController.navigate(it) }
       }
-
-    // show last visit date
-    println("Last: ${viewModel.getLastVisitDateTime()}")
-    viewModel.getLastVisitDateTime()?.also {
-      toast(getString(R.string.last_visited, it))
-    }
   }
 
   override fun onPause() {
     super.onPause()
+    // last visit
     viewModel.setLastVisitDateTime()
-  }
-
-  private fun toast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_LONG)?.show()
+    // opened track
+    when (navController.currentDestination?.id) {
+      R.id.navigation_detail,
+      R.id.navigation_detail_fragment -> {
+        viewModel.saveSelectedTrack()
+      }
+    }
   }
 
   /**

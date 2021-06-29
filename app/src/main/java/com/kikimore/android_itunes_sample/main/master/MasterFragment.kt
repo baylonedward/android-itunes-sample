@@ -39,7 +39,9 @@ class MasterFragment : BaseFragment<FragmentMasterBinding>() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    viewModel.searchTracks(getString(R.string.star))
+    // get last search query else use default "star"
+    val query = viewModel.getQueryString() ?: getString(R.string.star)
+    viewModel.searchTracks(query)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +61,7 @@ class MasterFragment : BaseFragment<FragmentMasterBinding>() {
     // set search icon
     binding.searchBarSearchImageView.setOnClickListener { search() }
     // set default search query if none
-    if (binding.searchBarEditText.text.isEmpty()) binding.searchBarEditText.setText(getString(R.string.star))
+    if (binding.searchBarEditText.text.isEmpty()) binding.searchBarEditText.setText(viewModel.getQueryString())
   }
 
   private fun setListView() {
